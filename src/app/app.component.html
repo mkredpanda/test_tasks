@@ -1,0 +1,111 @@
+@let counters = store.counters();
+
+<main class="page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Test Task</p>
+      <h1>Enrollment req</h1>
+      @if (store.currentUser(); as user) {
+        <p class="scope">
+          {{ user.name }} · college #{{ user.collegeId }} · branches:
+          {{ user.allowedBranches.length ? user.allowedBranches.join(', ') : 'all' }}
+        </p>
+      }
+    </div>
+  </header>
+
+  <section class="toolbar" aria-label="Filters">
+    <label>
+      Status
+      <select [ngModel]="store.statusFilter()" (ngModelChange)="store.setStatusFilter($event)">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </label>
+
+    <label>
+      Type
+      <select [ngModel]="store.typeFilter()" (ngModelChange)="store.setTypeFilter($event)">
+        <option value="all">All</option>
+        <option value="course">Course</option>
+        <option value="bundle">Bundle</option>
+      </select>
+    </label>
+
+    <label>
+      Branch
+      <select [ngModel]="store.branchFilter()" (ngModelChange)="store.setBranchFilter($event)">
+        <option value="all">All</option>
+        @for (branch of store.branches(); track branch) {
+          <option [value]="branch">{{ branch }}</option>
+        }
+      </select>
+    </label>
+  </section>
+
+  <section class="counters" aria-label="Queue counters">
+    <span class="counter counter--strong">Visible <b>{{ counters.total }}</b></span>
+    <span class="counter">Pending <b>{{ counters.pending }}</b></span>
+    <span class="counter">Approved <b>{{ counters.approved }}</b></span>
+    <span class="counter">Rejected <b>{{ counters.rejected }}</b></span>
+    <span class="counter">Course <b>{{ counters.course }}</b></span>
+    <span class="counter">Bundle <b>{{ counters.bundle }}</b></span>
+  </section>
+
+  @if (store.visibleRequests().length) {
+    <section class="queue" aria-label="Enrollment requests queue">
+      @for (request of store.visibleRequests(); track request.id) {
+        <app-request-item
+          [request]="request"
+          [check]="store.canActOn(request)"
+          (approve)="store.approve(request.id)"
+          (reject)="openReject($event)"
+        />
+      }
+    </section>
+  } @else {
+    <section class="empty" aria-live="polite">
+      <h2>No requests match these filters</h2>
+      <p>Change status, type, or branch to widen the queue.</p>
+    </section>
+  }
+</main>
+
+@if (rejecting(); as request) {
+  <div class="overlay" (click)="cancelReject()">
+    <section
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="reject-title"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 id="reject-title">Reject request</h2>
+      <p>{{ request.student.name }} · {{ request.course.title }}</p>
+
+      <label>
+        Reason
+        <textarea
+          rows="4"
+          placeholder="Explain why this request is being rejected"
+          [ngModel]="rejectReason()"
+          (ngModelChange)="rejectReason.set($event)"
+        ></textarea>
+      </label>
+
+      <div class="dialog-actions">
+        <button type="button" class="button" (click)="cancelReject()">Cancel</button>
+        <button
+          type="button"
+          class="button button--danger"
+          [disabled]="!rejectReason().trim()"
+          (click)="confirmReject()"
+        >
+          Confirm reject
+        </button>
+      </div>
+    </section>
+  </div>
+}

@@ -1,0 +1,48 @@
+@let r = request();
+
+<article class="card" [class.resolved]="r.status !== 'pending'">
+  <div class="top">
+    <div>
+      <h2>{{ r.course.title }}</h2>
+      <p class="who">
+        {{ r.student.name }}
+        <a [href]="'mailto:' + r.student.email">{{ r.student.email }}</a>
+      </p>
+    </div>
+
+    <div class="tags">
+      <span class="tag">{{ r.type | titlecase }}</span>
+      <span class="tag" [class]="r.status">{{ r.status | titlecase }}</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <div><span>Branch</span>{{ r.branch }}</div>
+    <div><span>Submitted</span>{{ r.submittedAt | date: 'mediumDate' }}</div>
+    <div><span>Source</span>{{ r.source }}</div>
+    <div><span>Payment</span>{{ r.paymentStatus }}</div>
+  </div>
+
+  @if (r.adminNote) {
+    <p class="note">Admin note: {{ r.adminNote }}</p>
+  }
+
+  @if (r.rejectionReason) {
+    <p class="note danger">Rejected: {{ r.rejectionReason }}</p>
+  }
+
+  @if (r.resolvedBy) {
+    <p class="muted">Resolved by {{ r.resolvedBy }}</p>
+  }
+
+  <div class="actions">
+    @if (check().allowed) {
+      <button class="btn approve" (click)="approve.emit(r)">Approve</button>
+      <button class="btn reject" (click)="reject.emit(r)">Reject</button>
+    } @else {
+      <button class="btn" disabled>Approve</button>
+      <button class="btn" disabled>Reject</button>
+      <span class="reason">{{ disabledReason() }}</span>
+    }
+  </div>
+</article>

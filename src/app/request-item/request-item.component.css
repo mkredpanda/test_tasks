@@ -1,0 +1,154 @@
+.card {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.card.resolved {
+  background: #f7f7f7;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+h2 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.who {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+a {
+  color: #1565c0;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  height: fit-content;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #eee;
+  color: #555;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tag.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.tag.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.tag.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.info div {
+  display: flex;
+  flex-direction: column;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.info span {
+  margin-bottom: 2px;
+  color: #888;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.note {
+  margin-top: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #f7f7f7;
+  font-size: 0.88rem;
+}
+
+.note.danger {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.muted {
+  margin-top: 8px;
+  color: #888;
+  font-size: 0.82rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn.approve {
+  border-color: #28a745;
+  background: #28a745;
+  color: #fff;
+}
+
+.btn.reject {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.reason {
+  color: #856404;
+  font-size: 0.84rem;
+}
+
+@media (max-width: 720px) {
+  .top {
+    flex-direction: column;
+  }
+
+  .info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
